@@ -39,8 +39,6 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion")
 
-    testImplementation("io.mockk:mockk:1.12.0")
-
     testImplementation("io.kotest:kotest-runner-junit5-jvm:$kotestVersion")
     implementation("io.kotest:kotest-assertions-core-jvm:$kotestVersion")
     implementation("io.kotest:kotest-property-jvm:$kotestVersion")

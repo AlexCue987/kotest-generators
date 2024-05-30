@@ -8,16 +8,6 @@ import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 class PublicCallablesFactoryKotest: StringSpec() {
     private val sut = PublicCallablesFactory()
     init {
-        "callablesToMock" {
-            sut.callablesToMock(Box::class) shouldContainExactlyInAnyOrder listOf(
-                Box::length,
-                Box::width,
-                Box::height,
-                Box::volume,
-                Box::flipOverLength
-            )
-        }
-
         "callablesToTest" {
             sut.callablesToTest(Box::class) shouldContainExactlyInAnyOrder listOf(
                 Box::volume,

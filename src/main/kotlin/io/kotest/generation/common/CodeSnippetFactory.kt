@@ -90,7 +90,7 @@ class CodeSnippetFactory(private val sampleValues: Map<KClass<*>, () -> String> 
                     buffer.addLine(nameValueFormatter(parameterName, nestedParameterCode, isLast))
                 }
                 //TODO: should we customize fallback?
-                else -> addLastResortMockk(
+                else -> addLastResortPlug(
                     klass,
                     buffer,
                     isLast,
@@ -103,18 +103,18 @@ class CodeSnippetFactory(private val sampleValues: Map<KClass<*>, () -> String> 
         }
     }
 
-    private fun addLastResortMockk(
+    private fun addLastResortPlug(
         klass: KClass<*>,
         buffer: CodeSnippet,
         isLast: Boolean,
         nameValueFormatter: NameValueFormatter,
         parameterName: String
     ) {
-        val bufferForMockk = CodeSnippet()
-        LastResortVisitor(this).handle(klass, bufferForMockk, isLast = true)
-        val value = bufferForMockk.sourceCodeAsOneString()
+        val plug = CodeSnippet()
+        LastResortVisitor(this).handle(klass, plug, isLast = true)
+        val value = plug.sourceCodeAsOneString()
         val line = nameValueFormatter(parameterName, value, isLast)
-        buffer.addClassNames(bufferForMockk.qualifiedNames())
+        buffer.addClassNames(plug.qualifiedNames())
         buffer.addLine(line)
     }
 

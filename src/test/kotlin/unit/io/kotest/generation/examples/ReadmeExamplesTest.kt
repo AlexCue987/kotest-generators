@@ -1,9 +1,6 @@
 package io.kotest.generation.examples
 
 import io.kotest.core.spec.style.StringSpec
-import io.kotest.generation.generators.actual.serializeToAssertions
-import io.kotest.generation.generators.actual.serializeToKotlin
-import io.kotest.generation.generators.actual.serializeToMocks
 import io.kotest.generation.generators.sample.generateSampleInstances
 import io.kotest.generation.serializeForTests
 import java.math.BigDecimal
@@ -42,7 +39,7 @@ class ReadmeExamplesTest: StringSpec() {
 
 
     init {
-        "generate assignments, assertions, and mocks".config(enabled = false) {
+        "generate assignments and assertions".config(enabled = false) {
             serializeForTests(thing, box)
         }
         "sample".config(enabled = false) {

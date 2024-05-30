@@ -258,7 +258,7 @@ class ThingFactoryKotest: StringSpec() {
 ```
 
 In this simple example `systemToTest` has really simple parameters which are easy to serialize. 
-In a more complex case, when we are generating tests for a service, and some of its parameters are other components, those are mocked:
+In a more complex case, when we are generating tests for a service, and some of its parameters are other components, we cannot serialize those and bail out:
 ```kotlin
 private val systemToTest = CleanupService(
     dao = CleanupDao(
@@ -473,7 +473,7 @@ thing = NestedThing(
 ```
 
 ### If none of the above conditions matches, we generate a TODO comment
-In the following example `anotherService` class does not have a public primary contructor, so it is mocked:
+In the following example `anotherService` class does not have a public primary contructor, so we cannot generate code to serialize it:
 ```kotlin
 private val systemToTest = MyService(
     anotherService = AnotherService(
