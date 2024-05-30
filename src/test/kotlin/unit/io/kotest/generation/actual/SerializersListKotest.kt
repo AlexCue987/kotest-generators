@@ -78,22 +78,34 @@ class SerializersListKotest: StringSpec() {
                 counter shouldBe 1
              }
         }
-//
-//        "invoke both serializers, none should handle" {
-//            every { serializer1.serialize(any(), any(), any()) } returns false
-//            every { serializer2.serialize(any(), any(), any()) } returns false
-//            val actual = sut.serialize("Instance", buffer, false)
-//            assertSoftly {
-//                actual shouldBe false
-//                buffer.qualifiedNames() shouldBe listOf()
-//                buffer.sourceCode() shouldBe listOf()
-//                verify(exactly = 1) {
-//                    serializer1.serialize(any(), any(), any())
-//                }
-//                verify(exactly = 1) {
-//                    serializer2.serialize(any(), any(), any())
-//                }
-//            }
-//        }
+
+        "invoke both serializers, none should handle" {
+            var counter1 = 0
+            val serializer1: SerializerVisitor = object : SerializerVisitor {
+                override fun canHandle(instance: Any?): Boolean {
+                    counter1++
+                    return false
+                }
+
+                override fun handle(instance: Any?, buffer: CodeSnippet, isLast: Boolean) { }
+            }
+            var counter2 = 0
+            val serializer2: SerializerVisitor = object : SerializerVisitor {
+                override fun canHandle(instance: Any?): Boolean {
+                    counter2++
+                    return false
+                }
+
+                override fun handle(instance: Any?, buffer: CodeSnippet, isLast: Boolean) { }
+            }
+            val actual = SerializersList(listOf(serializer1, serializer2)).serialize("Instance", buffer, false)
+            assertSoftly {
+                actual shouldBe false
+                buffer.qualifiedNames() shouldBe listOf()
+                buffer.sourceCode() shouldBe listOf()
+                counter1 shouldBe 1
+                counter2 shouldBe 1
+            }
+        }
     }
 }
