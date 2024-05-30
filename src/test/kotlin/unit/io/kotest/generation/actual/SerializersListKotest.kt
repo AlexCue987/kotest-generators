@@ -51,27 +51,33 @@ class SerializersListKotest: StringSpec() {
                 buffer.sourceCode() shouldBe listOf("line")
            }
         }
-//
-//        "invoke both serializers, second should handle" {
-//            every { serializer1.serialize(any(), any(), any()) } returns false
-//            every { serializer2.serialize(any(), any(), any()) } answers {
-//                buffer.addClassName("class")
-//                buffer.addLine("line")
-//                true
-//            }
-//            val actual = sut.serialize("Instance", buffer, false)
-//            assertSoftly {
-//                actual shouldBe true
-//                buffer.qualifiedNames() shouldBe listOf("class")
-//                buffer.sourceCode() shouldBe listOf("line")
-//                verify(exactly = 1) {
-//                    serializer1.serialize(any(), any(), any())
-//                }
-//                verify(exactly = 1) {
-//                    serializer2.serialize(any(), any(), any())
-//                }
-//             }
-//        }
+
+        "invoke both serializers, second should handle" {
+            var counter = 0
+            val serializer1: SerializerVisitor = object : SerializerVisitor {
+                override fun canHandle(instance: Any?): Boolean {
+                    counter++
+                    return false
+                }
+
+                override fun handle(instance: Any?, buffer: CodeSnippet, isLast: Boolean) { }
+            }
+            val serializer2: SerializerVisitor = object : SerializerVisitor {
+                override fun canHandle(instance: Any?) = true
+
+                override fun handle(instance: Any?, buffer: CodeSnippet, isLast: Boolean) {
+                    buffer.addClassName("class")
+                    buffer.addLine("line")
+                }
+            }
+            val actual = SerializersList(listOf(serializer1, serializer2)).serialize("Instance", buffer, false)
+            assertSoftly {
+                actual shouldBe true
+                buffer.qualifiedNames() shouldBe listOf("class")
+                buffer.sourceCode() shouldBe listOf("line")
+                counter shouldBe 1
+             }
+        }
 //
 //        "invoke both serializers, none should handle" {
 //            every { serializer1.serialize(any(), any(), any()) } returns false
