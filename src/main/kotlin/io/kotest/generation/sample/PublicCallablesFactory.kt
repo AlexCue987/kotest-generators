@@ -6,16 +6,13 @@ import kotlin.reflect.KVisibility
 import kotlin.reflect.full.primaryConstructor
 
 class PublicCallablesFactory {
-    fun callablesToMock(klass: KClass<*>): List<KCallable<*>> {
+
+    fun callablesToTest(klass: KClass<*>): List<KCallable<*>> {
         return klass.members
-            .filter { it.visibility == KVisibility.PUBLIC &&
+            .filter { it.visibility in listOf(KVisibility.PUBLIC, KVisibility.INTERNAL) &&
                     it.name !in functionsNotToTest() &&
                     !it.isSuspend &&
                     !it.name.startsWith("component")}
-    }
-
-    fun callablesToTest(klass: KClass<*>): List<KCallable<*>> {
-        return callablesToMock(klass)
             .filter { it.name !in primaryConstructorFields(klass) }
     }
 

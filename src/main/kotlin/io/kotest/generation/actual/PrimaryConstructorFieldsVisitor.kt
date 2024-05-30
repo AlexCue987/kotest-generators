@@ -97,7 +97,7 @@ class SerializeToInstanceStrategy(val suffix: String = ""): SerializeByFieldsStr
     override val outputValues = true
 }
 
-class SerializeToAssertionOrMockStrategy(
+class SerializeStrategy(
     override val suppressCommas: Boolean,
     override val outputValues: Boolean,
     val fieldNameAndTypeSerializer: (name: String, type: String) -> String): SerializeByFieldsStrategy {
@@ -108,7 +108,7 @@ class SerializeToAssertionOrMockStrategy(
                 true
             }
             else -> {
-                buffer.addLine("// only data classes can be converted to assertions or mocks, cannot handle ${klass.qualifiedName}")
+                buffer.addLine("// only data classes can be converted to assertions, cannot handle ${klass.qualifiedName}")
                 false
             }
         }
@@ -129,18 +129,18 @@ class SerializeToAssertionOrMockStrategy(
     override val exposePrivateFields = false
 }
 
-val SerializeToAssertionStrategy = SerializeToAssertionOrMockStrategy(suppressCommas = true, outputValues = true) {
+val SerializeToAssertionStrategy = SerializeStrategy(suppressCommas = true, outputValues = true) {
     name, _ -> "actual.$name shouldBe "
 }
 
-val SerializeToMockValuesStrategy = SerializeToAssertionOrMockStrategy(suppressCommas = true, outputValues = true) {
+val SerializeToMockValuesStrategy = SerializeStrategy(suppressCommas = true, outputValues = true) {
         name, _ -> "every { ret.$name } returns "
 }
 
-val SerializeToMockFieldNamesStrategy = SerializeToAssertionOrMockStrategy(suppressCommas = true, outputValues = false) {
+val SerializeToMockFieldNamesStrategy = SerializeStrategy(suppressCommas = true, outputValues = false) {
         name, _ -> "every { ret.$name } returns $name"
 }
 
-val SerializeToParameterizedMockStrategy = SerializeToAssertionOrMockStrategy(suppressCommas = false, outputValues = true) {
+val SerializeToParameterizedMockStrategy = SerializeStrategy(suppressCommas = false, outputValues = true) {
         name, type -> "$name: $type = "
 }
