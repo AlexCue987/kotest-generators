@@ -110,11 +110,11 @@ class CodeSnippetFactory(private val sampleValues: Map<KClass<*>, () -> String> 
         nameValueFormatter: NameValueFormatter,
         parameterName: String
     ) {
-        val buffer = CodeSnippet()
-        LastResortVisitor(this).handle(klass, buffer, isLast = true)
-        val value = buffer.sourceCodeAsOneString()
+        val plug = CodeSnippet()
+        LastResortVisitor(this).handle(klass, plug, isLast = true)
+        val value = plug.sourceCodeAsOneString()
         val line = nameValueFormatter(parameterName, value, isLast)
-        buffer.addClassNames(buffer.qualifiedNames())
+        buffer.addClassNames(plug.qualifiedNames())
         buffer.addLine(line)
     }
 
