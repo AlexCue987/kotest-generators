@@ -8,14 +8,20 @@ class ImportsGeneratorKotest: StringSpec() {
 
     init {
         "sorts distinct imports" {
-//            val systemToTest = mockk<HasImports>()
-//            every { systemToTest.qualifiedNames() } returns listOf("shapes.Square", "shapes.Circle", "angles.Right")
-//            val unitTest = mockk<HasImports>()
-//            every { unitTest.qualifiedNames() } returns listOf("shapes.Square", "angles.Acute", "angles.Right")
-//
-//            val actual = generatorToTest.generate(systemToTest, unitTest)
-//
-//            actual shouldBe listOf("angles.Acute", "angles.Right", "shapes.Circle", "shapes.Square")
+            val systemToTest: HasImports = object : HasImports {
+                override fun qualifiedNames(): Collection<String> {
+                    return listOf("shapes.Square", "shapes.Circle", "angles.Right")
+                }
+            }
+            val unitTest: HasImports = object : HasImports {
+                override fun qualifiedNames(): Collection<String> {
+                    return listOf("shapes.Square", "angles.Acute", "angles.Right")
+                }
+            }
+
+            val actual = generatorToTest.generate(systemToTest, unitTest)
+
+            actual shouldBe listOf("angles.Acute", "angles.Right", "shapes.Circle", "shapes.Square")
         }
     }
 }
